@@ -1,0 +1,19 @@
+# 신규 — 26.11.10 _ YSH _ 외란 명령 넣기 (cue_server, 수동 -> 브리지). 기록용이 아니다
+# 26.11.11 _ YSH _ mr_disturbance_msgs 에서 옮겼다 — 사용자 요청: 외란 메시지를 MORAI 메시지 패키지 하나로. 칸·순서·뜻은 같다
+string trigger      # 빈 문자열 = 상태 조회
+string run          # /daq/run_state 의 run 이름과 같게, 빈 문자열 = 표시 없음
+# 26.11.10 _ YSH _ base_seed 설명을 확정 규칙(05 §1 규칙 5)으로 고쳤다. 0 이 아닌 값이 지금 구간의 (run, base_seed) 와 같으면 구간을
+#   그대로 두고(EPOCH_KEPT) 문장만 적용한다. 다르면 새 구간(EPOCH — 전체 해제, frame_seq 0). 0 이면 구간을 건드리지 않고,
+#   켜는 명령인데 구간이 없으면 브리지가 시드를 뽑는다(AUTO_SEED)
+# 원문: uint64 base_seed    # 0 이 아니면 새 시드 구간 (전체 해제 + frame_seq 0). 1 ~ 999999999999999
+uint64 base_seed    # 1 ~ 999999999999999, 0 = 구간 유지. (run, base_seed) 가 지금 구간과 다를 때만 새 시드 구간
+string source       # 보낸 쪽 (기록용)
+uint64 seq          # 보낸 쪽 일련번호 (기록용)
+---
+bool ok
+string message                         # OK ... 또는 <CODE>: 이유
+builtin_interfaces/Time applied_time   # 받아들인 시각 (이 PC system clock), ok false 면 0
+DisturbanceCommand command             # 읽은 값
+string run                             # 지금 시드 구간의 run
+uint64 base_seed                       # 지금 시드 구간의 기본 시드
+DisturbanceStatus status               # 마지막 객체 프레임의 상태 (이 명령 적용 전일 수 있다)
